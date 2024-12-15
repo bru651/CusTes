@@ -44,17 +44,19 @@ import androidx.navigation.compose.rememberNavController
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val gameSettingsViewModel = GameSettingsViewModel()
         setContent {
             val navController: NavHostController = rememberNavController()
             //Surface(color = MaterialTheme.colors.background) {
                 NavHost(navController = navController, startDestination = "menu") {
-                    composable("menu") { MainMenu(navController) }
-                    composable("game") { TetrisGame(navController) }
+                    composable("menu") { MainMenu(navController, gameSettingsViewModel) }
+                    composable("game") { TetrisGame(navController, gameSettingsViewModel) }
+                    composable("settings") { SettingsMenu(navController, gameSettingsViewModel) }
                 }
-            //}
         }
     }
 }
+
 
 /*class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
