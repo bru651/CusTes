@@ -13,15 +13,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 
 import androidx.compose.material3.TextField
 import androidx.compose.ui.graphics.Color
 
-import androidx.compose.foundation.lazy.LazyRow
 
 import androidx.compose.runtime.*
 
@@ -43,6 +38,11 @@ fun MainMenu(navController: NavController, viewModel: GameSettingsViewModel) {
 
         Button(onClick = { navController.navigate("settings") }) {
             Text("Settings")
+        }
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Button(onClick = { navController.navigate("records") }) {
+            Text("Records")
         }
     }
 }
@@ -173,7 +173,7 @@ fun NumberSetting(label: String, value: Int, onValueChange: (Int) -> Unit) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(label, fontSize = 16.sp)
+        Text(label, fontSize = 15.sp)
 
         Row(verticalAlignment = Alignment.CenterVertically) {
             HoldableButton(onPress = { if (value > 0) onValueChange(value - 1) }) {
@@ -182,7 +182,7 @@ fun NumberSetting(label: String, value: Int, onValueChange: (Int) -> Unit) {
             TextField(
                 value = value.toString(),
                 onValueChange = { it.toIntOrNull()?.let(onValueChange) },
-                modifier = Modifier.width(50.dp),
+                modifier = Modifier.width(65.dp),
                 singleLine = true
             )
             HoldableButton(onPress = { onValueChange(value + 1) }) {
@@ -191,6 +191,7 @@ fun NumberSetting(label: String, value: Int, onValueChange: (Int) -> Unit) {
         }
     }
 }
+
 
 
 @Composable

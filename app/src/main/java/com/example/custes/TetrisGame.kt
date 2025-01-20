@@ -15,18 +15,10 @@ import kotlinx.coroutines.delay
 
 import androidx.compose.ui.platform.LocalConfiguration
 
-//import kotlin.math.pow
 import androidx.compose.material3.Text
 
 import androidx.compose.material3.Button
-//import androidx.compose.material.Button
-//import androidx.compose.material.Text
-import androidx.compose.runtime.*
 import androidx.navigation.NavController
-
-//import androidx.compose.ui.Alignment
-//import androidx.compose.ui.Modifier
-//import androidx.compose.ui.graphics.Color
 
 
 import androidx.compose.runtime.rememberCoroutineScope
@@ -34,7 +26,11 @@ import kotlinx.coroutines.launch
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.ui.graphics.toArgb
+
+import androidx.compose.material3.AlertDialog
+
+import androidx.compose.material3.TextField
+import androidx.compose.ui.text.input.TextFieldValue
 
 // Game configuration
 const val ROWS = 40
@@ -56,7 +52,7 @@ const val FILLED = 1
 const val SHADOW = 2
 
 @Composable
-fun TetrisGame(navController: NavController, viewModel: GameSettingsViewModel) {
+fun TetrisGame(navController: NavController, viewModel: GameSettingsViewModel, scoresViewModel: ScoresViewModel) {
     val currentBackStackEntry = navController.currentBackStackEntry
 
     val colorMap = mapOf(
@@ -72,6 +68,7 @@ fun TetrisGame(navController: NavController, viewModel: GameSettingsViewModel) {
     var pause by remember { mutableStateOf(false) }
     var score by remember { mutableStateOf(0) }
     var currentDelay by remember { mutableStateOf(viewModel.StartingDelay) }
+    var playerName by remember { mutableStateOf(TextFieldValue("")) }
 
     val scope = rememberCoroutineScope() // Coroutine scope for navigation
 
@@ -141,10 +138,12 @@ fun TetrisGame(navController: NavController, viewModel: GameSettingsViewModel) {
             }
             }
         }
+
+        /*
         // Navigate back to main menu on game over
         scope.launch {
             navController.popBackStack() // Go back to the previous screen (Main Menu)
-        }
+        }*/
     }
 
     Column(
@@ -252,6 +251,40 @@ fun TetrisGame(navController: NavController, viewModel: GameSettingsViewModel) {
         }
 
     }
+    if (gameOver) {
+        AlertDialog(
+            onDismissRequest = {},
+            title = { Text("Game Over!") },
+            text = {
+                Column {
+                    Text("Your score: $score")
+                    TextField(
+                        value = playerName,
+                        onValueChange = { playerName = it },
+                        label = { Text("Enter your name") }
+                    )
+                }
+            },
+            confirmButton = {
+                Button(onClick = {
+                    scope.launch {
+                        scoresViewModel.addScore(playerName.text.ifEmpty { "Anonymous" }, score)
+                    }
+                    navController.navigate("records")
+                }) {
+                    Text("Submit")
+                }
+            },
+            dismissButton = {
+                Button(onClick = {
+                    navController.navigate("menu")
+                }) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
+
 }
 
 fun placeShape(shape: List<Pair<Int, Int>>, pos: Pair<Int, Int>, grid: Array<Array<Int>>) {

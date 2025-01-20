@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    //kotlin("jvm") version "2.1.0"
+    //kotlin("plugin.serialization")
 }
 
 android {
@@ -60,4 +62,9 @@ dependencies {
 
     // Jetpack Compose integration
     implementation("androidx.navigation:navigation-compose:2.8.4")
+
+    // Room
+    implementation("androidx.datastore:datastore-preferences:1.1.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
+
 }
